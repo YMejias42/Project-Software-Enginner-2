@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registro — Biblioteca</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family:'DM Sans',sans-serif; }
+    h1,label { font-family:'Syne',sans-serif; }
+    .noise::before {
+      content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    }
+    .input-field {
+      background:transparent; border:none; border-bottom:1.5px solid #0D0D0D40; border-radius:0;
+      padding:10px 0; width:100%; font-family:'DM Sans',sans-serif; font-size:.95rem;
+      color:#0D0D0D; outline:none; transition:border-color .3s;
+    }
+    .input-field::placeholder { color:#0D0D0D55; }
+    .input-field:focus { border-color:#3D5A47; }
+    .field-group { position:relative; }
+    .field-icon { position:absolute; right:0; bottom:12px; opacity:0; transition:opacity .3s; color:#3D5A47; font-size:12px; font-family:'Syne',sans-serif; font-weight:600; }
+    .input-field:valid:not(:placeholder-shown) + .field-icon { opacity:1; }
+    .btn-primary {
+      background:#0D0D0D; color:#F5F0E8; font-family:'Syne',sans-serif; font-weight:600;
+      letter-spacing:.08em; text-transform:uppercase; font-size:.8rem; padding:14px 40px;
+      border:none; cursor:pointer; position:relative; overflow:hidden; width:100%;
+    }
+    .btn-primary::after {
+      content:''; position:absolute; left:-100%; top:0; width:100%; height:100%;
+      background:#3D5A47; transition:left .4s ease; z-index:0;
+    }
+    .btn-primary:hover::after { left:0; }
+    .btn-primary span { position:relative; z-index:1; }
+    .deco-line { width:40px; height:2px; background:#C4714F; display:inline-block; vertical-align:middle; margin-right:12px; }
+    .step-dot { width:8px; height:8px; border-radius:50%; background:#0D0D0D18; transition:background .3s,transform .3s; }
+    .step-dot.active { background:#C4714F; transform:scale(1.3); }
+    .strength-bar { height:2px; background:#0D0D0D10; overflow:hidden; }
+    .strength-fill { height:100%; width:0%; transition:width .4s ease,background .4s ease; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    .au { animation:fadeUp .6s ease forwards; }
+    .d1{animation-delay:.1s;opacity:0} .d2{animation-delay:.2s;opacity:0} .d3{animation-delay:.35s;opacity:0}
+    .d4{animation-delay:.5s;opacity:0} .d5{animation-delay:.62s;opacity:0} .d6{animation-delay:.74s;opacity:0} .d7{animation-delay:.86s;opacity:0}
+  </style>
+</head>
+<body class="noise bg-[#F5F0E8] min-h-screen flex items-center justify-center px-4 py-12">
+
+  <div class="fixed top-0 left-0 w-1/2 h-full bg-[#3D5A47] opacity-5 -z-0 pointer-events-none"
+       style="clip-path:polygon(0% 0%,80% 0%,100% 100%,0% 100%)"></div>
+  <div class="fixed top-12 right-12 w-24 h-24 border border-[#C4714F] opacity-20 rounded-full pointer-events-none -z-0"></div>
+
+  <div class="relative z-10 w-full max-w-md">
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for msg in messages %}
+        <div class="mb-6 bg-[#0D0D0D] text-[#F5F0E8] text-sm px-5 py-3 flex justify-between">
+          <span>{{ msg }}</span>
+          <button onclick="this.parentElement.remove()" class="opacity-50 hover:opacity-100 ml-4">×</button>
+        </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="au d1 mb-8">
+      <span class="deco-line"></span>
+      <span class="text-xs font-[Syne] font-semibold tracking-widest text-[#0D0D0D] uppercase opacity-50">Sistema de Biblioteca</span>
+    </div>
+
+    <h1 class="au d2 font-[Syne] text-5xl font-extrabold text-[#0D0D0D] leading-tight mb-2">Registro<br>de usuario</h1>
+    <p class="au d3 text-sm text-[#0D0D0D] opacity-40 mb-8">Completa los datos para comenzar.</p>
+
+    <div class="au d3 flex gap-2 mb-10">
+      <div class="step-dot active" id="dot1"></div>
+      <div class="step-dot" id="dot2"></div>
+      <div class="step-dot" id="dot3"></div>
+    </div>
+
+    <form action="/register_user" method="POST" class="space-y-9">
+      <div class="au d3">
+        <label class="block text-xs font-[Syne] font-semibold tracking-widest text-[#0D0D0D] uppercase opacity-60 mb-3">Nombre completo</label>
+        <div class="field-group">
+          <input type="text" name="name" placeholder="Tu nombre" required class="input-field" id="iName"/>
+          <span class="field-icon">✓</span>
+        </div>
+      </div>
+      <div class="au d4">
+        <label class="block text-xs font-[Syne] font-semibold tracking-widest text-[#0D0D0D] uppercase opacity-60 mb-3">Correo electrónico</label>
+        <div class="field-group">
+          <input type="email" name="email" placeholder="tu@correo.com" required class="input-field" id="iEmail"/>
+          <span class="field-icon">✓</span>
+        </div>
+      </div>
+      <div class="au d5">
+        <label class="block text-xs font-[Syne] font-semibold tracking-widest text-[#0D0D0D] uppercase opacity-60 mb-3">Contraseña</label>
+        <div class="field-group">
+          <input type="password" name="password" placeholder="Mínimo 8 caracteres" required minlength="8" class="input-field" id="iPwd"/>
+          <span class="field-icon">✓</span>
+        </div>
+        <div class="strength-bar mt-3"><div class="strength-fill" id="sFill"></div></div>
+        <p class="text-xs opacity-40 mt-1.5" id="sLabel"></p>
+      </div>
+      <div class="au d6 flex items-start gap-3 pt-1">
+        <input type="checkbox" id="terms" required class="mt-0.5 w-4 h-4 accent-[#3D5A47] cursor-pointer flex-shrink-0"/>
+        <label for="terms" class="text-xs text-[#0D0D0D] opacity-50 leading-relaxed cursor-pointer">
+          Acepto los <a href="#" class="underline underline-offset-2 text-[#3D5A47]">términos y condiciones</a>.
+        </label>
+      </div>
+      <div class="au d7 pt-1">
+        <button type="submit" class="btn-primary"><span>Crear cuenta</span></button>
+      </div>
+    </form>
+
+    <div class="au d7 mt-10 flex items-center gap-3">
+      <div class="flex-1 h-px bg-[#0D0D0D] opacity-10"></div>
+      <p class="text-xs text-[#0D0D0D] opacity-50 whitespace-nowrap">¿Ya tienes cuenta?</p>
+      <div class="flex-1 h-px bg-[#0D0D0D] opacity-10"></div>
+    </div>
+    <div class="au d7 mt-4 text-center">
+      <a href="/login" class="font-[Syne] text-sm font-semibold tracking-wide text-[#3D5A47] border-b border-[#3D5A47] border-opacity-40 pb-0.5 hover:border-opacity-100 transition-all">
+        Volver al login
+      </a>
+    </div>
+  </div>
+
+  <script>
+    const pwd=document.getElementById('iPwd'),fill=document.getElementById('sFill'),lbl=document.getElementById('sLabel');
+    const dots=[document.getElementById('dot1'),document.getElementById('dot2'),document.getElementById('dot3')];
+    pwd.addEventListener('input',()=>{
+      const v=pwd.value; let s=0;
+      if(v.length>=8)s++; if(/[A-Z]/.test(v)&&/[a-z]/.test(v))s++; if(/[0-9]/.test(v)||/[^A-Za-z0-9]/.test(v))s++;
+      const lvls=[{w:'30%',bg:'#C4714F',t:'Débil'},{w:'65%',bg:'#B8A84A',t:'Moderada'},{w:'100%',bg:'#3D5A47',t:'Fuerte'}];
+      if(!v.length){fill.style.width='0%';lbl.textContent='';dots.forEach((d,i)=>d.classList.toggle('active',i===0));return;}
+      const l=lvls[(s||1)-1];fill.style.width=l.w;fill.style.background=l.bg;lbl.textContent=`Seguridad: ${l.t}`;lbl.style.color=l.bg;
+      dots.forEach((d,i)=>d.classList.toggle('active',i<s));
+    });
+  </script>
+</body>
+</html>

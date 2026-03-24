@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Catálogo — Biblioteca{% endblock %}
+{% block content %}
+
+<div class="mb-2">
+  <span style="width:40px;height:2px;background:#C4714F;display:inline-block;vertical-align:middle;margin-right:12px;"></span>
+  <span class="text-xs font-display font-semibold tracking-widest text-ink uppercase opacity-50">Catálogo completo</span>
+</div>
+<h1 class="font-display text-4xl font-extrabold text-ink mb-1">Libros</h1>
+<p class="text-sm text-ink opacity-40 mb-10">Selecciona un libro disponible para solicitarlo en préstamo.</p>
+
+<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+  {% for book in books %}
+  <div class="book-card bg-white p-0 overflow-hidden animate-fade-up" style="animation-delay:{{ loop.index0 * 0.07 }}s; opacity:0">
+    <!-- Color spine -->
+    <div class="h-2 w-full" style="background:{{ book['cover_color'] }}"></div>
+    <div class="p-6">
+      <div class="flex items-start justify-between mb-4">
+        <div>
+          <h3 class="font-display font-bold text-ink leading-tight mb-1">{{ book['title'] }}</h3>
+          <p class="text-xs text-ink opacity-50">{{ book['author'] }}</p>
+        </div>
+        {% if book['available'] %}
+        <span class="badge-available text-xs font-display font-semibold px-2 py-1 uppercase tracking-wide flex-shrink-0 ml-2">Disponible</span>
+        {% else %}
+        <span class="badge-borrowed text-xs font-display font-semibold px-2 py-1 uppercase tracking-wide flex-shrink-0 ml-2">Prestado</span>
+        {% endif %}
+      </div>
+      <div class="flex items-center gap-3 text-xs text-ink opacity-40 mb-5">
+        {% if book['genre'] %}<span>{{ book['genre'] }}</span>{% endif %}
+        {% if book['year'] %}<span>·</span><span>{{ book['year'] }}</span>{% endif %}
+      </div>
+      {% if book['available'] %}
+      <form action="{{ url_for('borrow', book_id=book['id']) }}" method="POST">
+        <button type="submit" class="btn-ink w-full text-center"><span>Solicitar préstamo</span></button>
+      </form>
+      {% else %}
+      <button disabled class="w-full py-3 text-xs font-display font-semibold uppercase tracking-widest text-ink opacity-25 border border-ink border-opacity-20 cursor-not-allowed">
+        No disponible
+      </button>
+      {% endif %}
+    </div>
+  </div>
+  {% else %}
+  <div class="col-span-3 text-center py-20 text-ink opacity-30">
+    <p class="text-5xl mb-4">📭</p>
+    <p class="font-display text-lg">No hay libros registrados.</p>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

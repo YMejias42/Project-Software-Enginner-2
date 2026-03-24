@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Mis préstamos — Biblioteca{% endblock %}
+{% block content %}
+
+<div class="mb-2">
+  <span style="width:40px;height:2px;background:#C4714F;display:inline-block;vertical-align:middle;margin-right:12px;"></span>
+  <span class="text-xs font-display font-semibold tracking-widest text-ink uppercase opacity-50">Historial personal</span>
+</div>
+<h1 class="font-display text-4xl font-extrabold text-ink mb-1">Mis préstamos</h1>
+<p class="text-sm text-ink opacity-40 mb-10">Libros que tienes activos o que has devuelto.</p>
+
+{% if loans %}
+<div class="space-y-3">
+  {% for loan in loans %}
+  <div class="stat-card p-5 flex items-center gap-5 animate-fade-up" style="animation-delay:{{ loop.index0 * 0.06 }}s;opacity:0">
+    <!-- Color indicator -->
+    <div class="w-1 self-stretch flex-shrink-0 rounded-full" style="background:{{ loan['cover_color'] }}"></div>
+
+    <div class="flex-1 min-w-0">
+      <h3 class="font-display font-bold text-ink truncate">{{ loan['title'] }}</h3>
+      <p class="text-xs text-ink opacity-50">{{ loan['author'] }}</p>
+    </div>
+
+    <div class="text-right flex-shrink-0">
+      <p class="text-xs text-ink opacity-40 mb-1">Prestado: {{ loan['loan_date'][:10] }}</p>
+      {% if loan['returned'] %}
+        <p class="text-xs text-ink opacity-40">Devuelto: {{ loan['return_date'][:10] }}</p>
+        <span class="inline-block mt-1 badge-available text-xs font-display font-semibold px-2 py-0.5 uppercase tracking-wide">Devuelto</span>
+      {% else %}
+        <span class="inline-block mt-1 badge-borrowed text-xs font-display font-semibold px-2 py-0.5 uppercase tracking-wide">Activo</span>
+      {% endif %}
+    </div>
+
+    {% if not loan['returned'] %}
+    <form action="{{ url_for('return_book', loan_id=loan['id']) }}" method="POST" class="flex-shrink-0">
+      <button type="submit" class="btn-clay text-xs py-2 px-4"><span>Devolver</span></button>
+    </form>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+
+{% else %}
+<div class="text-center py-24 text-ink opacity-30">
+  <p class="text-6xl mb-4">📖</p>
+  <p class="font-display text-xl mb-2">Sin préstamos aún</p>
+  <p class="text-sm">Ve al <a href="{{ url_for('books') }}" class="underline text-moss opacity-80">catálogo</a> para pedir un libro.</p>
+</div>
+{% endif %}
+
+{% endblock %}

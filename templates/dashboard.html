@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Biblioteca{% endblock %}
+{% block content %}
+
+<div class="mb-2">
+  <span style="width:40px;height:2px;background:#C4714F;display:inline-block;vertical-align:middle;margin-right:12px;"></span>
+  <span class="text-xs font-display font-semibold tracking-widest text-ink uppercase opacity-50">Panel principal</span>
+</div>
+<h1 class="font-display text-4xl font-extrabold text-ink mb-1">Bienvenido, <span class="text-moss">{{ session.user_name }}</span></h1>
+<p class="text-sm text-ink opacity-40 mb-10">Aquí tienes un resumen del sistema.</p>
+
+<!-- Stats -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+  <div class="stat-card p-6 animate-fade-up" style="animation-delay:.1s;opacity:0">
+    <p class="text-xs font-display font-semibold tracking-widest uppercase opacity-40 mb-2">Total libros</p>
+    <p class="text-4xl font-display font-extrabold text-ink">{{ total_books }}</p>
+  </div>
+  <div class="stat-card p-6 animate-fade-up" style="animation-delay:.2s;opacity:0">
+    <p class="text-xs font-display font-semibold tracking-widest uppercase opacity-40 mb-2">Disponibles</p>
+    <p class="text-4xl font-display font-extrabold text-moss">{{ available_books }}</p>
+  </div>
+  <div class="stat-card p-6 animate-fade-up" style="animation-delay:.3s;opacity:0">
+    <p class="text-xs font-display font-semibold tracking-widest uppercase opacity-40 mb-2">Prestados</p>
+    <p class="text-4xl font-display font-extrabold text-clay">{{ borrowed_books }}</p>
+  </div>
+  <div class="stat-card p-6 animate-fade-up" style="animation-delay:.4s;opacity:0">
+    <p class="text-xs font-display font-semibold tracking-widest uppercase opacity-40 mb-2">Mis activos</p>
+    <p class="text-4xl font-display font-extrabold text-ink">{{ my_loans }}</p>
+  </div>
+</div>
+
+<!-- Quick links -->
+<div class="grid md:grid-cols-3 gap-4">
+  <a href="{{ url_for('books') }}" class="group stat-card p-8 hover:border-moss transition-colors animate-fade-up" style="animation-delay:.5s;opacity:0">
+    <div class="text-3xl mb-4">📚</div>
+    <h3 class="font-display text-lg font-bold text-ink mb-1">Catálogo</h3>
+    <p class="text-sm text-ink opacity-40">Explora todos los libros disponibles.</p>
+  </a>
+  <a href="{{ url_for('my_loans') }}" class="group stat-card p-8 hover:border-clay transition-colors animate-fade-up" style="animation-delay:.6s;opacity:0">
+    <div class="text-3xl mb-4">🔖</div>
+    <h3 class="font-display text-lg font-bold text-ink mb-1">Mis préstamos</h3>
+    <p class="text-sm text-ink opacity-40">Gestiona tus libros prestados.</p>
+  </a>
+  <a href="{{ url_for('occupied') }}" class="group stat-card p-8 hover:border-ink transition-colors animate-fade-up" style="animation-delay:.7s;opacity:0">
+    <div class="text-3xl mb-4">📋</div>
+    <h3 class="font-display text-lg font-bold text-ink mb-1">Libros ocupados</h3>
+    <p class="text-sm text-ink opacity-40">Ve qué libros están en préstamo.</p>
+  </a>
+</div>
+
+{% endblock %}
