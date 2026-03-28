@@ -4,81 +4,186 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>{% block title %}Biblioteca{% endblock %}</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+
   <script src="https://cdn.tailwindcss.com"></script>
+
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { display: ['Syne','sans-serif'], body: ['DM Sans','sans-serif'] },
-          colors: { cream:'#F5F0E8', ink:'#0D0D0D', moss:'#3D5A47', clay:'#C4714F' },
-          keyframes: {
-            fadeUp: { '0%':{opacity:'0',transform:'translateY(20px)'}, '100%':{opacity:'1',transform:'translateY(0)'} },
+          fontFamily: {
+            display: ['Times New Roman','serif'],
+            body: ['Times New Roman','serif']
           },
-          animation: { 'fade-up':'fadeUp 0.5s ease forwards' },
+          colors: {
+            light:'#f1f5f9',
+            dark:'#0f172a',
+            primary:'#1e3a8a',
+            accent:'#2563eb'
+          },
+          keyframes: {
+            fadeUp: {
+              '0%':{opacity:'0',transform:'translateY(20px)'},
+              '100%':{opacity:'1',transform:'translateY(0)'}
+            },
+          },
+          animation: {
+            'fade-up':'fadeUp 0.5s ease forwards'
+          },
         }
       }
     }
   </script>
+
   <style>
-    body { font-family:'DM Sans',sans-serif; }
-    h1,h2,h3,h4,label,nav { font-family:'Syne',sans-serif; }
+    body { font-family:'Times New Roman', serif; }
+    h1,h2,h3,h4,label,nav { font-family:'Times New Roman', serif; }
+
     .noise::before {
       content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
       background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
     }
+
     .nav-link { position:relative; }
-    .nav-link::after { content:''; position:absolute; left:0; bottom:-2px; width:0; height:1.5px; background:#C4714F; transition:width .3s; }
-    .nav-link:hover::after, .nav-link.active::after { width:100%; }
-    .btn-ink {
-      background:#0D0D0D; color:#F5F0E8; font-family:'Syne',sans-serif; font-weight:600;
-      letter-spacing:.07em; text-transform:uppercase; font-size:.75rem; padding:10px 24px;
-      border:none; cursor:pointer; position:relative; overflow:hidden; transition:.3s;
-      display:inline-block; text-decoration:none;
+    .nav-link::after {
+      content:'';
+      position:absolute;
+      left:0;
+      bottom:-2px;
+      width:0;
+      height:1.5px;
+      background:#2563eb;
+      transition:width .3s;
     }
-    .btn-ink::after {
-      content:''; position:absolute; left:-100%; top:0; width:100%; height:100%;
-      background:#3D5A47; transition:left .35s ease; z-index:0;
+    .nav-link:hover::after,
+    .nav-link.active::after { width:100%; }
+
+    .btn-primary {
+      background:#1e3a8a;
+      color:#ffffff;
+      font-weight:600;
+      letter-spacing:.07em;
+      text-transform:uppercase;
+      font-size:.75rem;
+      padding:10px 24px;
+      border:none;
+      cursor:pointer;
+      position:relative;
+      overflow:hidden;
+      transition:.3s;
+      display:inline-block;
+      text-decoration:none;
     }
-    .btn-ink:hover::after { left:0; }
-    .btn-ink span { position:relative; z-index:1; }
-    .btn-clay {
-      background:#C4714F; color:#F5F0E8; font-family:'Syne',sans-serif; font-weight:600;
-      letter-spacing:.07em; text-transform:uppercase; font-size:.75rem; padding:10px 24px;
-      border:none; cursor:pointer; position:relative; overflow:hidden; transition:.3s;
-      display:inline-block; text-decoration:none;
+    .btn-primary::after {
+      content:'';
+      position:absolute;
+      left:-100%;
+      top:0;
+      width:100%;
+      height:100%;
+      background:#2563eb;
+      transition:left .35s ease;
+      z-index:0;
     }
-    .btn-clay::after {
-      content:''; position:absolute; left:-100%; top:0; width:100%; height:100%;
-      background:#0D0D0D; transition:left .35s ease; z-index:0;
+    .btn-primary:hover::after { left:0; }
+    .btn-primary span { position:relative; z-index:1; }
+
+    .btn-secondary {
+      background:#2563eb;
+      color:#ffffff;
+      font-weight:600;
+      letter-spacing:.07em;
+      text-transform:uppercase;
+      font-size:.75rem;
+      padding:10px 24px;
+      border:none;
+      cursor:pointer;
+      position:relative;
+      overflow:hidden;
+      transition:.3s;
+      display:inline-block;
+      text-decoration:none;
     }
-    .btn-clay:hover::after { left:0; }
-    .btn-clay span { position:relative; z-index:1; }
-    .stat-card { border:1px solid #0D0D0D12; background:#fff8; backdrop-filter:blur(4px); }
-    .book-card { border:1px solid #0D0D0D10; transition:transform .25s, box-shadow .25s; }
-    .book-card:hover { transform:translateY(-4px); box-shadow:0 12px 30px #0D0D0D14; }
-    .badge-available { background:#3D5A4720; color:#3D5A47; }
-    .badge-borrowed  { background:#C4714F20; color:#C4714F; }
+    .btn-secondary::after {
+      content:'';
+      position:absolute;
+      left:-100%;
+      top:0;
+      width:100%;
+      height:100%;
+      background:#0f172a;
+      transition:left .35s ease;
+      z-index:0;
+    }
+    .btn-secondary:hover::after { left:0; }
+    .btn-secondary span { position:relative; z-index:1; }
+
+    .stat-card {
+      border:1px solid #1e3a8a20;
+      background:#ffffffcc;
+      backdrop-filter:blur(4px);
+    }
+
+    .book-card {
+      border:1px solid #1e3a8a15;
+      transition:transform .25s, box-shadow .25s;
+    }
+    .book-card:hover {
+      transform:translateY(-4px);
+      box-shadow:0 12px 30px #1e3a8a20;
+    }
+
+    .badge-available {
+      background:#2563eb20;
+      color:#2563eb;
+    }
+
+    .badge-borrowed {
+      background:#1e3a8a20;
+      color:#1e3a8a;
+    }
+
     .flash-msg { animation: fadeUp .4s ease; }
   </style>
 </head>
-<body class="noise bg-cream min-h-screen">
+
+<body class="noise bg-light min-h-screen">
 
   {% if session.user_id %}
   <!-- Navbar -->
-  <nav class="relative z-20 border-b border-ink border-opacity-10 bg-cream bg-opacity-90 backdrop-blur-sm">
+  <nav class="relative z-20 border-b border-dark border-opacity-10 bg-light bg-opacity-90 backdrop-blur-sm">
     <div class="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
-      <a href="{{ url_for('dashboard') }}" class="font-display font-extrabold text-lg text-ink tracking-tight">
-        <span class="text-clay">■</span> Biblioteca
+
+      <a href="{{ url_for('dashboard') }}"
+         class="font-extrabold text-lg text-dark tracking-tight">
+        <span class="text-accent">■</span> Biblioteca
       </a>
+
       <div class="hidden md:flex items-center gap-8 text-xs font-semibold uppercase tracking-widest">
-        <a href="{{ url_for('books') }}"    class="nav-link text-ink opacity-60 hover:opacity-100 transition-opacity {% if request.endpoint=='books' %}active opacity-100{% endif %}">Catálogo</a>
-        <a href="{{ url_for('my_loans') }}" class="nav-link text-ink opacity-60 hover:opacity-100 transition-opacity {% if request.endpoint=='my_loans' %}active opacity-100{% endif %}">Mis préstamos</a>
-        <a href="{{ url_for('occupied') }}" class="nav-link text-ink opacity-60 hover:opacity-100 transition-opacity {% if request.endpoint=='occupied' %}active opacity-100{% endif %}">Ocupados</a>
+        <a href="{{ url_for('books') }}"
+           class="nav-link text-dark opacity-60 hover:opacity-100 {% if request.endpoint=='books' %}active opacity-100{% endif %}">
+           Catálogo
+        </a>
+
+        <a href="{{ url_for('my_loans') }}"
+           class="nav-link text-dark opacity-60 hover:opacity-100 {% if request.endpoint=='my_loans' %}active opacity-100{% endif %}">
+           Mis préstamos
+        </a>
+
+        <a href="{{ url_for('occupied') }}"
+           class="nav-link text-dark opacity-60 hover:opacity-100 {% if request.endpoint=='occupied' %}active opacity-100{% endif %}">
+           Ocupados
+        </a>
       </div>
+
       <div class="flex items-center gap-4">
-        <span class="hidden md:inline text-xs font-body text-ink opacity-40">{{ session.user_name }}</span>
-        <a href="{{ url_for('logout') }}" class="btn-clay text-xs py-2 px-4"><span>Salir</span></a>
+        <span class="hidden md:inline text-xs opacity-40">
+          {{ session.user_name }}
+        </span>
+
+        <a href="{{ url_for('logout') }}" class="btn-secondary text-xs py-2 px-4">
+          <span>Salir</span>
+        </a>
       </div>
     </div>
   </nav>
@@ -89,9 +194,9 @@
     {% if messages %}
     <div class="relative z-10 max-w-6xl mx-auto px-6 pt-4">
       {% for msg in messages %}
-      <div class="flash-msg mb-2 bg-ink text-cream text-sm font-body px-5 py-3 flex justify-between items-center">
+      <div class="flash-msg mb-2 bg-primary text-white text-sm px-5 py-3 flex justify-between items-center">
         <span>{{ msg }}</span>
-        <button onclick="this.parentElement.remove()" class="opacity-50 hover:opacity-100 ml-4 text-lg leading-none">×</button>
+        <button onclick="this.parentElement.remove()" class="opacity-50 hover:opacity-100 ml-4 text-lg">×</button>
       </div>
       {% endfor %}
     </div>

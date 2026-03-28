@@ -2,45 +2,47 @@
 {% block title %}Libros ocupados — Biblioteca{% endblock %}
 {% block content %}
 
-<div class="mb-2">
-  <span style="width:40px;height:2px;background:#C4714F;display:inline-block;vertical-align:middle;margin-right:12px;"></span>
-  <span class="text-xs font-display font-semibold tracking-widest text-ink uppercase opacity-50">Estado del sistema</span>
+<div class="mb-2" style="font-family:'Times New Roman', serif;">
+  <span style="width:40px;height:2px;background:#3B82F6;display:inline-block;vertical-align:middle;margin-right:12px;"></span>
+  <span class="text-xs font-semibold tracking-widest uppercase opacity-50" style="color:#1E3A8A;">Estado del sistema</span>
 </div>
-<h1 class="font-display text-4xl font-extrabold text-ink mb-1">Libros ocupados</h1>
-<p class="text-sm text-ink opacity-40 mb-10">Todos los libros que están actualmente en préstamo.</p>
+<h1 class="text-4xl font-extrabold mb-1" style="font-family:'Times New Roman', serif; color:#1E3A8A;">Libros ocupados</h1>
+<p class="text-sm opacity-40 mb-10" style="font-family:'Times New Roman', serif; color:#1E3A8A;">Todos los libros que están actualmente en préstamo.</p>
 
 {% if loans %}
-<div class="overflow-hidden border border-ink border-opacity-10">
+<div class="overflow-hidden border" style="border-color:#3B82F6; border-opacity:20%; font-family:'Times New Roman', serif;">
   <!-- Table header -->
-  <div class="grid grid-cols-4 gap-4 px-6 py-3 bg-ink bg-opacity-5 border-b border-ink border-opacity-10">
-    <span class="text-xs font-display font-semibold tracking-widest uppercase opacity-50">Libro</span>
-    <span class="text-xs font-display font-semibold tracking-widest uppercase opacity-50">Autor</span>
-    <span class="text-xs font-display font-semibold tracking-widest uppercase opacity-50">Lector</span>
-    <span class="text-xs font-display font-semibold tracking-widest uppercase opacity-50">Fecha préstamo</span>
+  <div class="grid grid-cols-4 gap-4 px-6 py-3 bg-opacity-5 border-b transition-colors" style="background-color:#3B82F6; border-color:#3B82F6;">
+    <span class="text-xs font-semibold tracking-widest uppercase opacity-50" style="color:#1E3A8A;">Libro</span>
+    <span class="text-xs font-semibold tracking-widest uppercase opacity-50" style="color:#1E3A8A;">Autor</span>
+    <span class="text-xs font-semibold tracking-widest uppercase opacity-50" style="color:#1E3A8A;">Lector</span>
+    <span class="text-xs font-semibold tracking-widest uppercase opacity-50" style="color:#1E3A8A;">Fecha préstamo</span>
   </div>
 
   {% for loan in loans %}
-  <div class="grid grid-cols-4 gap-4 px-6 py-4 border-b border-ink border-opacity-5 items-center hover:bg-ink hover:bg-opacity-[0.02] transition-colors animate-fade-up" style="animation-delay:{{ loop.index0 * 0.05 }}s;opacity:0">
+  <div class="grid grid-cols-4 gap-4 px-6 py-4 border-b items-center hover:bg-opacity-5 transition-colors animate-fade-up" 
+       style="animation-delay:{{ loop.index0 * 0.05 }}s; opacity:0; border-color:#3B82F6;">
     <div class="flex items-center gap-3">
       <div class="w-2 h-2 rounded-full flex-shrink-0" style="background:{{ loan['cover_color'] }}"></div>
-      <span class="font-display font-semibold text-sm text-ink truncate">{{ loan['title'] }}</span>
+      <span class="font-semibold text-sm truncate" style="color:#1E3A8A;">{{ loan['title'] }}</span>
     </div>
-    <span class="text-sm text-ink opacity-60 truncate">{{ loan['author'] }}</span>
-    <span class="text-sm text-ink opacity-60">{{ loan['borrower'] }}</span>
+    <span class="text-sm opacity-60 truncate" style="color:#1E3A8A;">{{ loan['author'] }}</span>
+    <span class="text-sm opacity-60" style="color:#1E3A8A;">{{ loan['borrower'] }}</span>
     <div class="flex items-center justify-between">
-      <span class="text-sm text-ink opacity-40">{{ loan['loan_date'][:10] }}</span>
-      <span class="badge-borrowed text-xs font-display font-semibold px-2 py-0.5 uppercase tracking-wide">Prestado</span>
+      <span class="text-sm opacity-40" style="color:#1E3A8A;">{{ loan['loan_date'][:10] }}</span>
+      <span class="text-xs font-semibold px-2 py-0.5 uppercase tracking-wide" 
+            style="background:#3B82F6; color:white;">Prestado</span>
     </div>
   </div>
   {% endfor %}
 </div>
 
-<p class="text-xs text-ink opacity-30 mt-4">{{ loans | length }} libro(s) actualmente en préstamo.</p>
+<p class="text-xs mt-4 opacity-30" style="color:#1E3A8A;">{{ loans | length }} libro(s) actualmente en préstamo.</p>
 
 {% else %}
-<div class="text-center py-24 text-ink opacity-30">
+<div class="text-center py-24 opacity-30" style="font-family:'Times New Roman', serif; color:#1E3A8A;">
   <p class="text-6xl mb-4">✅</p>
-  <p class="font-display text-xl mb-2">Todos los libros están disponibles</p>
+  <p class="text-xl mb-2" style="font-weight:bold;">Todos los libros están disponibles</p>
   <p class="text-sm">No hay préstamos activos en este momento.</p>
 </div>
 {% endif %}
