@@ -27,7 +27,7 @@ def login_required(f):
 # ── Auth ──────────────────────────────────────────────────────────────────────
 
 @app.route('/', methods=['GET'])
-@app.route('/login', methods=['GET'])   # ← Ahora /login acepta GET también
+@app.route('/login', methods=['GET'])
 def login():
     if 'user_id' in session:
         return redirect(url_for('dashboard'))
