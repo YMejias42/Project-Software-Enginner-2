@@ -16,7 +16,6 @@ def get_db_connection():
 
 
 def login_required(f):
-    """Simple decorator to protect routes."""
     from functools import wraps
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -29,7 +28,7 @@ def login_required(f):
 
 # ── Auth ─────────────────────────────────────────────────────────────────────
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def login():
     if 'user_id' in session:
         return redirect(url_for('dashboard'))
