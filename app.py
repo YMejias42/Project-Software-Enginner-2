@@ -7,8 +7,6 @@ app.secret_key = "secretkey"
 DATABASE = "database.db"
 
 
-# ── DB helpers ──────────────────────────────────────────────────────────────
-
 def get_db_connection():
     conn = sqlite3.connect(DATABASE)
     conn.row_factory = sqlite3.Row
@@ -26,9 +24,10 @@ def login_required(f):
     return decorated
 
 
-# ── Auth ─────────────────────────────────────────────────────────────────────
+# ── Auth ──────────────────────────────────────────────────────────────────────
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'])
+@app.route('/login', methods=['GET'])   # ← Ahora /login acepta GET también
 def login():
     if 'user_id' in session:
         return redirect(url_for('dashboard'))
@@ -57,7 +56,7 @@ def login_user():
         return redirect(url_for('login'))
 
 
-@app.route('/register')
+@app.route('/register', methods=['GET'])
 def register():
     return render_template('register.html')
 
@@ -92,7 +91,7 @@ def logout():
     return redirect(url_for('login'))
 
 
-# ── Dashboard ────────────────────────────────────────────────────────────────
+# ── Dashboard ─────────────────────────────────────────────────────────────────
 
 @app.route('/dashboard')
 @login_required
@@ -115,7 +114,7 @@ def dashboard():
     )
 
 
-# ── Books ────────────────────────────────────────────────────────────────────
+# ── Books ─────────────────────────────────────────────────────────────────────
 
 @app.route('/books')
 @login_required
@@ -126,7 +125,7 @@ def books():
     return render_template('books.html', books=books)
 
 
-# ── Loans ────────────────────────────────────────────────────────────────────
+# ── Loans ─────────────────────────────────────────────────────────────────────
 
 @app.route('/borrow/<int:book_id>', methods=['POST'])
 @login_required
