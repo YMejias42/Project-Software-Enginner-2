@@ -116,6 +116,15 @@ def dashboard():
 
 # ── Books ─────────────────────────────────────────────────────────────────────
 
+@app.route('/books')
+@login_required
+def books():
+    conn = get_db_connection()
+    books = conn.execute("SELECT * FROM books").fetchall()
+    conn.close()
+    return render_template('books.html', books=books)
+
+
 @app.route('/add_book', methods=['GET', 'POST'])
 @login_required
 def add_book():
@@ -123,7 +132,7 @@ def add_book():
         title        = request.form['title']
         author       = request.form['author']
         cover_color  = request.form['cover_color']
-        available    = 1  # siempre disponible al crearlo
+        available    = 1
 
         conn = get_db_connection()
         conn.execute(
