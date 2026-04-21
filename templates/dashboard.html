@@ -6,10 +6,14 @@
   <span style="width:40px;height:2px;background:#3B82F6;display:inline-block;vertical-align:middle;margin-right:12px;"></span>
   <span class="text-xs font-display font-semibold tracking-widest uppercase opacity-50" style="color:#1E3A8A;">Panel principal</span>
 </div>
+
 <h1 class="font-display text-4xl font-extrabold mb-1" style="font-family: 'Times New Roman', serif; color:#1E3A8A;">
-  Bienvenido, <span style="color:#3B82F6">{{ session.user_name }}</span>
+  Bienvenido, <span style="color:#3B82F6">{{ session['user_name'] }}</span>
 </h1>
-<p class="text-sm opacity-40 mb-10" style="font-family: 'Times New Roman', serif; color:#1E3A8A;">Aquí tienes un resumen del sistema.</p>
+
+<p class="text-sm opacity-40 mb-10" style="font-family: 'Times New Roman', serif; color:#1E3A8A;">
+  Aquí tienes un resumen del sistema.
+</p>
 
 <!-- Stats -->
 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
@@ -17,14 +21,17 @@
     <p class="text-xs font-semibold tracking-widest uppercase opacity-40 mb-2" style="color:#1E3A8A;">Total libros</p>
     <p class="text-4xl font-extrabold" style="color:#1E3A8A;">{{ total_books }}</p>
   </div>
+
   <div class="stat-card p-6 animate-fade-up" style="animation-delay:.2s;opacity:0; font-family:'Times New Roman', serif; border:1px solid #3B82F6;">
     <p class="text-xs font-semibold tracking-widest uppercase opacity-40 mb-2" style="color:#1E3A8A;">Disponibles</p>
     <p class="text-4xl font-extrabold" style="color:#3B82F6;">{{ available_books }}</p>
   </div>
+
   <div class="stat-card p-6 animate-fade-up" style="animation-delay:.3s;opacity:0; font-family:'Times New Roman', serif; border:1px solid #3B82F6;">
     <p class="text-xs font-semibold tracking-widest uppercase opacity-40 mb-2" style="color:#1E3A8A;">Prestados</p>
     <p class="text-4xl font-extrabold" style="color:#60A5FA;">{{ borrowed_books }}</p>
   </div>
+
   <div class="stat-card p-6 animate-fade-up" style="animation-delay:.4s;opacity:0; font-family:'Times New Roman', serif; border:1px solid #3B82F6;">
     <p class="text-xs font-semibold tracking-widest uppercase opacity-40 mb-2" style="color:#1E3A8A;">Mis activos</p>
     <p class="text-4xl font-extrabold" style="color:#1E3A8A;">{{ my_loans }}</p>
@@ -33,21 +40,31 @@
 
 <!-- Quick links -->
 <div class="grid md:grid-cols-3 gap-4">
-  <a href="{{ url_for('books') }}" class="group stat-card p-8 hover:border-[#3B82F6] transition-colors animate-fade-up" style="animation-delay:.5s;opacity:0; font-family:'Times New Roman', serif; border:1px solid #3B82F6;">
+
+  <a href="{{ url_for('books') }}" 
+     class="group stat-card p-8 hover:border-[#3B82F6] transition-colors animate-fade-up"
+     style="animation-delay:.5s;opacity:0; font-family:'Times New Roman', serif; border:1px solid #3B82F6;">
     <div class="text-3xl mb-4">📚</div>
     <h3 class="text-lg font-bold mb-1" style="color:#1E3A8A;">Catálogo</h3>
     <p class="text-sm opacity-40" style="color:#1E3A8A;">Explora todos los libros disponibles.</p>
   </a>
-  <a href="{{ url_for('my_loans') }}" class="group stat-card p-8 hover:border-[#60A5FA] transition-colors animate-fade-up" style="animation-delay:.6s;opacity:0; font-family:'Times New Roman', serif; border:1px solid #3B82F6;">
+
+  <a href="{{ url_for('my_loans') }}" 
+     class="group stat-card p-8 hover:border-[#60A5FA] transition-colors animate-fade-up"
+     style="animation-delay:.6s;opacity:0; font-family:'Times New Roman', serif; border:1px solid #3B82F6;">
     <div class="text-3xl mb-4">🔖</div>
     <h3 class="text-lg font-bold mb-1" style="color:#1E3A8A;">Mis préstamos</h3>
     <p class="text-sm opacity-40" style="color:#1E3A8A;">Gestiona tus libros prestados.</p>
   </a>
-  <a href="{{ url_for('occupied') }}" class="group stat-card p-8 hover:border-[#1E3A8A] transition-colors animate-fade-up" style="animation-delay:.7s;opacity:0; font-family:'Times New Roman', serif; border:1px solid #3B82F6;">
+
+  <a href="{{ url_for('occupied') }}" 
+     class="group stat-card p-8 hover:border-[#1E3A8A] transition-colors animate-fade-up"
+     style="animation-delay:.7s;opacity:0; font-family:'Times New Roman', serif; border:1px solid #3B82F6;">
     <div class="text-3xl mb-4">📋</div>
     <h3 class="text-lg font-bold mb-1" style="color:#1E3A8A;">Libros ocupados</h3>
     <p class="text-sm opacity-40" style="color:#1E3A8A;">Ve qué libros están en préstamo.</p>
   </a>
+
 </div>
 
 {% endblock %}
