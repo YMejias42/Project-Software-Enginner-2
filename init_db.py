@@ -1,14 +1,16 @@
 """
-init_db.py  —  Inicializa la base de datos SQLite para el sistema de biblioteca.
-Ejecuta:  python init_db.py
+init_db.py — Inicializa la base de datos SQLite usando la configuración de la app.
 """
-import sqlite3
 
-DATABASE = "database.db"
+import sqlite3
+from flask import current_app
 
 
 def init_db():
-    conn = sqlite3.connect(DATABASE)
+    # Usar la base de datos definida en la app (producción o testing)
+    database = current_app.config["DATABASE"]
+
+    conn = sqlite3.connect(database)
     cur  = conn.cursor()
 
     # ── Tabla: usuarios ──────────────────────────────────────────────────────
@@ -30,7 +32,7 @@ def init_db():
             genre       TEXT,
             year        INTEGER,
             cover_color TEXT    DEFAULT '#3D5A47',
-            available   INTEGER DEFAULT 1        -- 1 = disponible, 0 = prestado
+            available   INTEGER DEFAULT 1
         )
     """)
 
@@ -42,7 +44,7 @@ def init_db():
             book_id     INTEGER NOT NULL REFERENCES books(id),
             loan_date   TEXT    DEFAULT (datetime('now')),
             return_date TEXT,
-            returned    INTEGER DEFAULT 0        -- 0 = activo, 1 = devuelto
+            returned    INTEGER DEFAULT 0
         )
     """)
 
@@ -73,9 +75,3 @@ def init_db():
 
     conn.commit()
     conn.close()
-    print("✓ Base de datos inicializada correctamente.")
-    print("  Usuario de prueba → email: admin@biblioteca.com | contraseña: admin123")
-
-
-if __name__ == "__main__":
-    init_db()
