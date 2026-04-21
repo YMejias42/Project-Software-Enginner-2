@@ -116,13 +116,69 @@ def dashboard():
 
 # ── Books ─────────────────────────────────────────────────────────────────────
 
-@app.route('/books')
+@app.route('/add_book', methods=['GET', 'POST'])
 @login_required
-def books():
-    conn  = get_db_connection()
-    books = conn.execute("SELECT * FROM books ORDER BY title").fetchall()
+def add_book():
+    if request.method == 'POST':
+        title        = request.form['title']
+        author       = request.form['author']
+        cover_color  = request.form['cover_color']
+        available    = 1  # siempre disponible al crearlo
+
+        conn = get_db_connection()
+        conn.execute(
+            "INSERT INTO books (title, author, cover_color, available) VALUES (?,?,?,?)",
+            (title, author, cover_color, available)
+        )
+        conn.commit()
+        conn.close()
+
+        flash("Libro añadido correctamente.")
+        return redirect(url_for('books'))
+
+    return render_template('add_book.html')
+
+
+@app.route('/edit_book/<int:book_id>', methods=['GET', 'POST'])
+@login_required
+def edit_book(book_id):
+    conn = get_db_connection()
+
+    if request.method == 'POST':
+        title       = request.form['title']
+        author      = request.form['author']
+        cover_color = request.form['cover_color']
+
+        conn.execute(
+            "UPDATE books SET title=?, author=?, cover_color=? WHERE id=?",
+            (title, author, cover_color, book_id)
+        )
+        conn.commit()
+        conn.close()
+
+        flash("Libro actualizado.")
+        return redirect(url_for('books'))
+
+    book = conn.execute("SELECT * FROM books WHERE id=?", (book_id,)).fetchone()
     conn.close()
-    return render_template('books.html', books=books)
+
+    if not book:
+        flash("Libro no encontrado.")
+        return redirect(url_for('books'))
+
+    return render_template('edit_book.html', book=book)
+
+
+@app.route('/delete_book/<int:book_id>', methods=['POST'])
+@login_required
+def delete_book(book_id):
+    conn = get_db_connection()
+    conn.execute("DELETE FROM books WHERE id=?", (book_id,))
+    conn.commit()
+    conn.close()
+
+    flash("Libro eliminado.")
+    return redirect(url_for('books'))
 
 
 # ── Loans ─────────────────────────────────────────────────────────────────────
