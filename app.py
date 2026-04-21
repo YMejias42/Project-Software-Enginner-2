@@ -18,70 +18,68 @@ def login_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         if 'user_id' not in session:
-            flash("Debes iniciar sesión primero.")
+            flash("Iniciar sesión")
             return redirect(url_for('login'))
         return f(*args, **kwargs)
     return decorated
 
 
-# ── Auth ──────────────────────────────────────────────────────────────────────
+# ───────────────────────────────────────────────────────────────
+# AUTH
+# ───────────────────────────────────────────────────────────────
 
 @app.route('/', methods=['GET'])
-@app.route('/login', methods=['GET'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    if 'user_id' in session:
-        return redirect(url_for('dashboard'))
+    if request.method == 'POST':
+        email    = request.form['email']
+        password = request.form['password']
+
+        conn = get_db_connection()
+        user = conn.execute(
+            "SELECT * FROM users WHERE email=? AND password=?",
+            (email, password)
+        ).fetchone()
+        conn.close()
+
+        if user:
+            session['user_id']   = user['id']
+            session['user_name'] = user['name']
+            flash("Dashboard")
+            return redirect(url_for('dashboard'))
+        else:
+            flash("Credenciales incorrectas")
+            return redirect(url_for('login'))
+
     return render_template('login.html')
 
 
-@app.route('/login', methods=['POST'])
-def login_user():
-    email    = request.form['email']
-    password = request.form['password']
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        name     = request.form['name']
+        email    = request.form['email']
+        password = request.form['password']
 
-    conn = get_db_connection()
-    user = conn.execute(
-        "SELECT * FROM users WHERE email=? AND password=?",
-        (email, password)
-    ).fetchone()
-    conn.close()
+        conn = get_db_connection()
+        existing = conn.execute("SELECT id FROM users WHERE email=?", (email,)).fetchone()
 
-    if user:
-        session['user_id']   = user['id']
-        session['user_name'] = user['name']
-        flash("¡Bienvenido, {}!".format(user['name']))
-        return redirect(url_for('dashboard'))
-    else:
-        flash("Credenciales incorrectas.")
+        if existing:
+            conn.close()
+            flash("Ya existe una cuenta con ese correo.")
+            return redirect(url_for('register'))
+
+        conn.execute(
+            "INSERT INTO users (name, email, password) VALUES (?,?,?)",
+            (name, email, password)
+        )
+        conn.commit()
+        conn.close()
+
+        flash("Registro exitoso")
         return redirect(url_for('login'))
 
-
-@app.route('/register', methods=['GET'])
-def register():
     return render_template('register.html')
-
-
-@app.route('/register_user', methods=['POST'])
-def register_user():
-    name     = request.form['name']
-    email    = request.form['email']
-    password = request.form['password']
-
-    conn = get_db_connection()
-    existing = conn.execute("SELECT id FROM users WHERE email=?", (email,)).fetchone()
-    if existing:
-        conn.close()
-        flash("Ya existe una cuenta con ese correo.")
-        return redirect(url_for('register'))
-
-    conn.execute(
-        "INSERT INTO users (name, email, password) VALUES (?,?,?)",
-        (name, email, password)
-    )
-    conn.commit()
-    conn.close()
-    flash("¡Cuenta creada! Ahora puedes iniciar sesión.")
-    return redirect(url_for('login'))
 
 
 @app.route('/logout')
@@ -91,7 +89,9 @@ def logout():
     return redirect(url_for('login'))
 
 
-# ── Dashboard ─────────────────────────────────────────────────────────────────
+# ───────────────────────────────────────────────────────────────
+# DASHBOARD
+# ───────────────────────────────────────────────────────────────
 
 @app.route('/dashboard')
 @login_required
@@ -114,7 +114,9 @@ def dashboard():
     )
 
 
-# ── Books ─────────────────────────────────────────────────────────────────────
+# ───────────────────────────────────────────────────────────────
+# BOOKS
+# ───────────────────────────────────────────────────────────────
 
 @app.route('/books')
 @login_required
@@ -165,7 +167,7 @@ def edit_book(book_id):
         conn.commit()
         conn.close()
 
-        flash("Libro actualizado.")
+        flash("Libro actualizado")
         return redirect(url_for('books'))
 
     book = conn.execute("SELECT * FROM books WHERE id=?", (book_id,)).fetchone()
@@ -186,22 +188,24 @@ def delete_book(book_id):
     conn.commit()
     conn.close()
 
-    flash("Libro eliminado.")
+    flash("Libro eliminado")
     return redirect(url_for('books'))
 
 
-# ── Loans ─────────────────────────────────────────────────────────────────────
+# ───────────────────────────────────────────────────────────────
+# LOANS
+# ───────────────────────────────────────────────────────────────
 
-@app.route('/borrow/<int:book_id>', methods=['POST'])
+@app.route('/loan/<int:book_id>', methods=['POST'])
 @login_required
-def borrow(book_id):
+def loan(book_id):
     conn = get_db_connection()
     book = conn.execute("SELECT * FROM books WHERE id=?", (book_id,)).fetchone()
 
     if not book:
-        flash("Libro no encontrado.")
+        flash("No disponible")
     elif not book['available']:
-        flash("El libro no está disponible en este momento.")
+        flash("No disponible")
     else:
         conn.execute(
             "INSERT INTO loans (user_id, book_id) VALUES (?,?)",
@@ -209,7 +213,7 @@ def borrow(book_id):
         )
         conn.execute("UPDATE books SET available=0 WHERE id=?", (book_id,))
         conn.commit()
-        flash(f"¡Prestamo de «{book['title']}» registrado con éxito!")
+        flash("Prestamo realizado")
 
     conn.close()
     return redirect(url_for('books'))
@@ -235,7 +239,7 @@ def return_book(loan_id):
         )
         conn.execute("UPDATE books SET available=1 WHERE id=?", (loan['book_id'],))
         conn.commit()
-        flash(f"«{loan['title']}» devuelto correctamente. ¡Gracias!")
+        flash("Libro devuelto")
 
     conn.close()
     return redirect(url_for('my_loans'))
@@ -274,7 +278,7 @@ def occupied():
     return render_template('occupied.html', loans=loans)
 
 
-# ── Run ───────────────────────────────────────────────────────────────────────
+# ───────────────────────────────────────────────────────────────
 
 if __name__ == '__main__':
     app.run(debug=True)
