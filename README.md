@@ -1,9 +1,7 @@
-📘 README.md — Sistema de Biblioteca
-📌 Título del Proyecto
-LibraryFlow — Sistema de Gestión de Biblioteca
+Sistema de Gestión de Biblioteca
 
 👤 Integrante del Proyecto
-Yeriel [Apellido] — Desarrollador único
+Yeriel Mejias Rios — Desarrollador único
 
 🧩 Descripción del Problema
 Las bibliotecas pequeñas suelen manejar sus préstamos y registros de forma manual, lo que genera errores, pérdida de información y dificultad para dar seguimiento a los libros prestados.
