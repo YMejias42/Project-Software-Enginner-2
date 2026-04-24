@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 import sqlite3
-import os
 from functools import wraps
 
 
@@ -286,7 +285,15 @@ def create_app(test_config=None):
     return app
 
 
-# Solo se ejecuta en modo real, no en tests
+# -------------------------
+# Inicializar DB al arrancar
+# -------------------------
 if __name__ == '__main__':
     app = create_app()
+
+    # Inicializar la base de datos
+    with app.app_context():
+        from init_db import init_db
+        init_db()
+
     app.run(debug=True)
