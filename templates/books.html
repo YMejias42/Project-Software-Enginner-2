@@ -11,16 +11,32 @@
   AÑADIR LIBRO
 </a>
 
+<!-- GRID DE TARJETAS -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
   {% for book in books %}
   <div class="border rounded-lg p-4 shadow hover:shadow-lg transition">
 
+    <!-- Título -->
     <h2 class="text-xl font-bold mb-1">{{ book.title }}</h2>
+
+    <!-- Autor -->
     <p class="text-gray-700"><strong>Autor:</strong> {{ book.author }}</p>
-    <p class="text-gray-700"><strong>Categoría:</strong> {{ book.category }}</p>
+
+    <!-- Color de portada -->
+    <div class="flex items-center space-x-2 mt-1">
+      <span class="text-gray-700 font-semibold">Color:</span>
+      <div class="w-6 h-6 rounded border" style="background-color: {{ book.cover_color }}"></div>
+      <span class="text-gray-600">{{ book.cover_color }}</span>
+    </div>
+
+    <!-- Categoría -->
+    <p class="text-gray-700 mt-1"><strong>Categoría:</strong> {{ book.category }}</p>
+
+    <!-- Año -->
     <p class="text-gray-700"><strong>Año:</strong> {{ book.year }}</p>
 
+    <!-- Estado -->
     <p class="mt-2">
       {% if book.status == "DISPONIBLE" %}
         <span class="text-green-600 font-semibold">DISPONIBLE</span>
@@ -29,6 +45,7 @@
       {% endif %}
     </p>
 
+    <!-- BOTONES -->
     <div class="mt-4 flex flex-col space-y-2">
 
       {% if book.status == "DISPONIBLE" %}
