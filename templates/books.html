@@ -1,60 +1,61 @@
 {% extends "base.html" %}
-{% block title %}Libros{% endblock %}
+{% block title %}Catálogo{% endblock %}
 {% block content %}
 
-<h1 class="font-display text-3xl font-bold mb-6">Libros</h1>
+<h1 class="font-display text-3xl font-bold mb-6">CATÁLOGO COMPLETO</h1>
+
+<p class="mb-4 text-gray-700">Selecciona un libro disponible para solicitarlo en préstamo.</p>
 
 <a href="{{ url_for('add_book') }}"
-   class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition inline-block mb-4">
-  Añadir libro
+   class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition inline-block mb-6">
+  AÑADIR LIBRO
 </a>
 
-<table class="min-w-full border border-gray-300">
-  <thead>
-    <tr class="bg-gray-100 text-left">
-      <th class="px-4 py-2 border">Título</th>
-      <th class="px-4 py-2 border">Autor</th>
-      <th class="px-4 py-2 border">Color</th>
-      <th class="px-4 py-2 border">Año</th>
-      <th class="px-4 py-2 border">Estado</th>
-      <th class="px-4 py-2 border">Categoría</th>
-      <th class="px-4 py-2 border">Acciones</th>
-    </tr>
-  </thead>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-  <tbody>
-    {% for book in books %}
-    <tr class="hover:bg-gray-50">
-      <td class="px-4 py-2 border">{{ book.title }}</td>
-      <td class="px-4 py-2 border">{{ book.author }}</td>
-      <td class="px-4 py-2 border">{{ book.cover_color }}</td>
-      <td class="px-4 py-2 border">{{ book.year }}</td>
-      <td class="px-4 py-2 border">
-        {% if book.status == "DISPONIBLE" %}
-          <span class="text-green-600 font-semibold">Disponible</span>
-        {% else %}
-          <span class="text-red-600 font-semibold">Prestado</span>
-        {% endif %}
-      </td>
-      <td class="px-4 py-2 border">{{ book.category }}</td>
+  {% for book in books %}
+  <div class="border rounded-lg p-4 shadow hover:shadow-lg transition">
 
-      <td class="px-4 py-2 border">
-        <a href="{{ url_for('edit_book', book_id=book.id) }}"
-           class="text-blue-600 hover:underline mr-3">
-          Editar
-        </a>
+    <h2 class="text-xl font-bold mb-1">{{ book.title }}</h2>
+    <p class="text-gray-700"><strong>Autor:</strong> {{ book.author }}</p>
+    <p class="text-gray-700"><strong>Categoría:</strong> {{ book.category }}</p>
+    <p class="text-gray-700"><strong>Año:</strong> {{ book.year }}</p>
 
-        <form action="{{ url_for('delete_book', book_id=book.id) }}"
-              method="POST" class="inline">
-          <button class="text-red-600 hover:underline"
-                  onclick="return confirm('¿Eliminar libro?')">
-            Eliminar
-          </button>
-        </form>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+    <p class="mt-2">
+      {% if book.status == "DISPONIBLE" %}
+        <span class="text-green-600 font-semibold">DISPONIBLE</span>
+      {% else %}
+        <span class="text-red-600 font-semibold">PRESTADO</span>
+      {% endif %}
+    </p>
+
+    <div class="mt-4 flex flex-col space-y-2">
+
+      {% if book.status == "DISPONIBLE" %}
+      <form action="{{ url_for('loan', book_id=book.id) }}" method="POST">
+        <button class="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+          SOLICITAR PRÉSTAMO
+        </button>
+      </form>
+      {% endif %}
+
+      <a href="{{ url_for('edit_book', book_id=book.id) }}"
+         class="w-full text-center px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition">
+        EDITAR
+      </a>
+
+      <form action="{{ url_for('delete_book', book_id=book.id) }}" method="POST">
+        <button class="w-full px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+                onclick="return confirm('¿Eliminar libro?')">
+          ELIMINAR
+        </button>
+      </form>
+
+    </div>
+
+  </div>
+  {% endfor %}
+
+</div>
 
 {% endblock %}
