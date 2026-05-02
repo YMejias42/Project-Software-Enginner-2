@@ -24,6 +24,33 @@
            class="w-full border px-3 py-2 rounded">
   </div>
 
+  <div>
+    <label class="block text-sm font-semibold mb-1">Año de publicación</label>
+    <input type="number" name="year" required min="0" max="2100"
+           class="w-full border px-3 py-2 rounded">
+  </div>
+
+  <div>
+    <label class="block text-sm font-semibold mb-1">Estado</label>
+    <select name="status" required
+            class="w-full border px-3 py-2 rounded">
+      <option value="DISPONIBLE">Disponible</option>
+      <option value="PRESTADO">Prestado</option>
+    </select>
+  </div>
+
+  <div>
+    <label class="block text-sm font-semibold mb-1">Categoría</label>
+    <select name="category" required
+            class="w-full border px-3 py-2 rounded">
+      <option value="Novela">Novela</option>
+      <option value="Historia">Historia</option>
+      <option value="Infantil">Infantil</option>
+      <option value="Educativo">Educativo</option>
+      <option value="Otro">Otro</option>
+    </select>
+  </div>
+
   <button type="submit"
           class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
     Guardar

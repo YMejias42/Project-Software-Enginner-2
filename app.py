@@ -138,15 +138,20 @@ def create_app(test_config=None):
     @login_required
     def add_book():
         if request.method == 'POST':
-            title        = request.form['title']
-            author       = request.form['author']
-            cover_color  = request.form['cover_color']
-            available    = 1
+            title       = request.form['title']
+            author      = request.form['author']
+            cover_color = request.form['cover_color']
+            year        = request.form['year']
+            status      = request.form['status']
+            category    = request.form['category']
+
+            available = 1 if status == "DISPONIBLE" else 0
 
             conn = app.get_db_connection()
             conn.execute(
-                "INSERT INTO books (title, author, cover_color, available) VALUES (?,?,?,?)",
-                (title, author, cover_color, available)
+                """INSERT INTO books (title, author, cover_color, year, status, category, available)
+                   VALUES (?,?,?,?,?,?,?)""",
+                (title, author, cover_color, year, status, category, available)
             )
             conn.commit()
             conn.close()
@@ -166,10 +171,17 @@ def create_app(test_config=None):
             title       = request.form['title']
             author      = request.form['author']
             cover_color = request.form['cover_color']
+            year        = request.form['year']
+            status      = request.form['status']
+            category    = request.form['category']
+
+            available = 1 if status == "DISPONIBLE" else 0
 
             conn.execute(
-                "UPDATE books SET title=?, author=?, cover_color=? WHERE id=?",
-                (title, author, cover_color, book_id)
+                """UPDATE books
+                   SET title=?, author=?, cover_color=?, year=?, status=?, category=?, available=?
+                   WHERE id=?""",
+                (title, author, cover_color, year, status, category, available, book_id)
             )
             conn.commit()
             conn.close()
@@ -216,9 +228,9 @@ def create_app(test_config=None):
                 "INSERT INTO loans (user_id, book_id) VALUES (?,?)",
                 (session['user_id'], book_id)
             )
-            conn.execute("UPDATE books SET available=0 WHERE id=?", (book_id,))
+            conn.execute("UPDATE books SET available=0, status='PRESTADO' WHERE id=?", (book_id,))
             conn.commit()
-            flash("Prestamo realizado")
+            flash("Préstamo realizado")
 
         conn.close()
         return redirect(url_for('books'))
@@ -229,7 +241,9 @@ def create_app(test_config=None):
     def return_book(loan_id):
         conn = app.get_db_connection()
         loan = conn.execute(
-            "SELECT loans.*, books.title FROM loans JOIN books ON loans.book_id=books.id WHERE loans.id=? AND loans.user_id=?",
+            """SELECT loans.*, books.title FROM loans
+               JOIN books ON loans.book_id=books.id
+               WHERE loans.id=? AND loans.user_id=?""",
             (loan_id, session['user_id'])
         ).fetchone()
 
@@ -242,7 +256,7 @@ def create_app(test_config=None):
                 "UPDATE loans SET returned=1, return_date=datetime('now') WHERE id=?",
                 (loan_id,)
             )
-            conn.execute("UPDATE books SET available=1 WHERE id=?", (loan['book_id'],))
+            conn.execute("UPDATE books SET available=1, status='DISPONIBLE' WHERE id=?", (loan['book_id'],))
             conn.commit()
             flash("Libro devuelto")
 
