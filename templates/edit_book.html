@@ -1,59 +1,60 @@
 {% extends "base.html" %}
-{% block title %}Editar libro{% endblock %}
 {% block content %}
 
-<h1 class="font-display text-3xl font-bold mb-6">Editar libro</h1>
+<div class="max-w-xl mx-auto bg-white shadow-md rounded-lg p-6 mt-6">
+    <h2 class="text-2xl font-bold mb-4 text-gray-800">Editar Libro</h2>
 
-<form method="POST" class="space-y-4 max-w-md">
+    <form action="{{ url_for('edit_book', book_id=book['id']) }}" method="POST" class="space-y-4">
 
-  <div>
-    <label class="block text-sm font-semibold mb-1">Título</label>
-    <input type="text" name="title" value="{{ book.title }}" required
-           class="w-full border px-3 py-2 rounded">
-  </div>
+        <div>
+            <label class="block font-semibold">Título</label>
+            <input type="text" name="title" value="{{ book['title'] }}" required
+                   class="w-full border rounded px-3 py-2">
+        </div>
 
-  <div>
-    <label class="block text-sm font-semibold mb-1">Autor</label>
-    <input type="text" name="author" value="{{ book.author }}" required
-           class="w-full border px-3 py-2 rounded">
-  </div>
+        <div>
+            <label class="block font-semibold">Autor</label>
+            <input type="text" name="author" value="{{ book['author'] }}" required
+                   class="w-full border rounded px-3 py-2">
+        </div>
 
-  <div>
-    <label class="block text-sm font-semibold mb-1">Color de portada</label>
-    <input type="text" name="cover_color" value="{{ book.cover_color }}" required
-           class="w-full border px-3 py-2 rounded">
-  </div>
+        <div>
+            <label class="block font-semibold">Año</label>
+            <input type="number" name="year" value="{{ book['year'] }}"
+                   class="w-full border rounded px-3 py-2">
+        </div>
 
-  <div>
-    <label class="block text-sm font-semibold mb-1">Año de publicación</label>
-    <input type="number" name="year" value="{{ book.year }}" required min="0" max="2100"
-           class="w-full border px-3 py-2 rounded">
-  </div>
+        <div>
+            <label class="block font-semibold">Categoría</label>
+            <select name="category" class="w-full border rounded px-3 py-2">
+                <option {% if book['category']=="Novela" %}selected{% endif %}>Novela</option>
+                <option {% if book['category']=="Clásico" %}selected{% endif %}>Clásico</option>
+                <option {% if book['category']=="Fábula" %}selected{% endif %}>Fábula</option>
+                <option {% if book['category']=="Cuentos" %}selected{% endif %}>Cuentos</option>
+                <option {% if book['category']=="Misterio" %}selected{% endif %}>Misterio</option>
+                <option {% if book['category']=="Distopía" %}selected{% endif %}>Distopía</option>
+                <option {% if book['category']=="Otro" %}selected{% endif %}>Otro</option>
+            </select>
+        </div>
 
-  <div>
-    <label class="block text-sm font-semibold mb-1">Estado</label>
-    <select name="status" class="w-full border px-3 py-2 rounded">
-      <option value="DISPONIBLE" {% if book.status == "DISPONIBLE" %}selected{% endif %}>Disponible</option>
-      <option value="PRESTADO" {% if book.status == "PRESTADO" %}selected{% endif %}>Prestado</option>
-    </select>
-  </div>
+        <div>
+            <label class="block font-semibold">Estado</label>
+            <select name="status" class="w-full border rounded px-3 py-2">
+                <option value="DISPONIBLE" {% if book['status']=="DISPONIBLE" %}selected{% endif %}>DISPONIBLE</option>
+                <option value="PRESTADO" {% if book['status']=="PRESTADO" %}selected{% endif %}>PRESTADO</option>
+            </select>
+        </div>
 
-  <div>
-    <label class="block text-sm font-semibold mb-1">Categoría</label>
-    <select name="category" class="w-full border px-3 py-2 rounded">
-      <option value="Novela" {% if book.category == "Novela" %}selected{% endif %}>Novela</option>
-      <option value="Historia" {% if book.category == "Historia" %}selected{% endif %}>Historia</option>
-      <option value="Infantil" {% if book.category == "Infantil" %}selected{% endif %}>Infantil</option>
-      <option value="Educativo" {% if book.category == "Educativo" %}selected{% endif %}>Educativo</option>
-      <option value="Otro" {% if book.category == "Otro" %}selected{% endif %}>Otro</option>
-    </select>
-  </div>
+        <div>
+            <label class="block font-semibold">Color de Portada</label>
+            <input type="color" name="cover_color" value="{{ book['cover_color'] }}"
+                   class="w-20 h-10 border rounded">
+        </div>
 
-  <button type="submit"
-          class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition">
-    Actualizar
-  </button>
-
-</form>
+        <button class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">
+            Guardar Cambios
+        </button>
+    </form>
+</div>
 
 {% endblock %}

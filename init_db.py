@@ -23,17 +23,17 @@ def init_db():
         )
     """)
 
-    # ── Tabla: libros ────────────────────────────────────────────────────────
+    # ── Tabla: libros (CORREGIDA) ────────────────────────────────────────────
     cur.execute("""
         CREATE TABLE IF NOT EXISTS books (
             id          INTEGER PRIMARY KEY AUTOINCREMENT,
             title       TEXT    NOT NULL,
-            author      TEXT    NOT NULL,
-            genre       TEXT,
+            author      TEXT,
+            cover_color TEXT,
             year        INTEGER,
-            cover_color TEXT    DEFAULT '#3D5A47',
-            available   INTEGER DEFAULT 1,
-            UNIQUE(title, author)   -- Evita duplicados reales
+            status      TEXT DEFAULT 'DISPONIBLE',
+            category    TEXT DEFAULT 'Otro',
+            available   INTEGER DEFAULT 1
         )
     """)
 
@@ -68,7 +68,7 @@ def init_db():
         ]
 
         cur.executemany(
-            "INSERT INTO books (title, author, genre, year, cover_color) VALUES (?,?,?,?,?)",
+            "INSERT INTO books (title, author, category, year, cover_color) VALUES (?,?,?,?,?)",
             sample_books
         )
 

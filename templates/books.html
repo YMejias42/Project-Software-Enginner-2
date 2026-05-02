@@ -1,77 +1,53 @@
 {% extends "base.html" %}
-{% block title %}Catálogo{% endblock %}
 {% block content %}
 
-<h1 class="font-display text-3xl font-bold mb-6">CATÁLOGO COMPLETO</h1>
+<h2 class="text-3xl font-bold text-gray-800 mb-6">Catálogo de Libros</h2>
 
-<p class="mb-4 text-gray-700">Selecciona un libro disponible para solicitarlo en préstamo.</p>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
 
-<a href="{{ url_for('add_book') }}"
-   class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition inline-block mb-6">
-  AÑADIR LIBRO
-</a>
+    {% for book in books %}
+    <div class="bg-white shadow-md rounded-lg p-4 border-t-4"
+         style="border-color: {{ book['cover_color'] }}">
 
-<!-- GRID DE TARJETAS -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <h3 class="text-xl font-bold">{{ book['title'] }}</h3>
+        <p class="text-gray-600">{{ book['author'] }}</p>
 
-  {% for book in books %}
-  <div class="border rounded-lg p-4 shadow hover:shadow-lg transition">
+        <div class="mt-2 text-sm">
+            <p><strong>Año:</strong> {{ book['year'] }}</p>
+            <p><strong>Categoría:</strong> {{ book['category'] }}</p>
+            <p><strong>Estado:</strong>
+                <span class="font-semibold
+                    {% if book['status']=="DISPONIBLE" %}text-green-600{% else %}text-red-600{% endif %}">
+                    {{ book['status'] }}
+                </span>
+            </p>
+        </div>
 
-    <!-- Título -->
-    <h2 class="text-xl font-bold mb-1">{{ book.title }}</h2>
+        <div class="flex justify-between mt-4">
+            <a href="{{ url_for('edit_book', book_id=book['id']) }}"
+               class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">
+               Editar
+            </a>
 
-    <!-- Autor -->
-    <p class="text-gray-700"><strong>Autor:</strong> {{ book.author }}</p>
+            <form action="{{ url_for('delete_book', book_id=book['id']) }}" method="POST">
+                <button class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">
+                    Eliminar
+                </button>
+            </form>
+        </div>
 
-    <!-- Color de portada -->
-    <div class="flex items-center space-x-2 mt-1">
-      <span class="text-gray-700 font-semibold">Color:</span>
-      <div class="w-6 h-6 rounded border" style="background-color: {{ book.cover_color }}"></div>
-      <span class="text-gray-600">{{ book.cover_color }}</span>
-    </div>
-
-    <!-- Categoría -->
-    <p class="text-gray-700 mt-1"><strong>Categoría:</strong> {{ book.category }}</p>
-
-    <!-- Año -->
-    <p class="text-gray-700"><strong>Año:</strong> {{ book.year }}</p>
-
-    <!-- Estado -->
-    <p class="mt-2">
-      {% if book.status == "DISPONIBLE" %}
-        <span class="text-green-600 font-semibold">DISPONIBLE</span>
-      {% else %}
-        <span class="text-red-600 font-semibold">PRESTADO</span>
-      {% endif %}
-    </p>
-
-    <!-- BOTONES -->
-    <div class="mt-4 flex flex-col space-y-2">
-
-      {% if book.status == "DISPONIBLE" %}
-      <form action="{{ url_for('loan', book_id=book.id) }}" method="POST">
-        <button class="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-          SOLICITAR PRÉSTAMO
-        </button>
-      </form>
-      {% endif %}
-
-      <a href="{{ url_for('edit_book', book_id=book.id) }}"
-         class="w-full text-center px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition">
-        EDITAR
-      </a>
-
-      <form action="{{ url_for('delete_book', book_id=book.id) }}" method="POST">
-        <button class="w-full px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
-                onclick="return confirm('¿Eliminar libro?')">
-          ELIMINAR
-        </button>
-      </form>
+        {% if book['available'] %}
+        <form action="{{ url_for('loan', book_id=book['id']) }}" method="POST" class="mt-3">
+            <button class="w-full bg-green-600 text-white py-1 rounded hover:bg-green-700">
+                Prestar
+            </button>
+        </form>
+        {% else %}
+        <p class="mt-3 text-center text-red-600 font-semibold">No disponible</p>
+        {% endif %}
 
     </div>
-
-  </div>
-  {% endfor %}
+    {% endfor %}
 
 </div>
 

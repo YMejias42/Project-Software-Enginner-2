@@ -1,61 +1,60 @@
 {% extends "base.html" %}
-{% block title %}Añadir libro{% endblock %}
 {% block content %}
 
-<h1 class="font-display text-3xl font-bold mb-6">Añadir libro</h1>
+<div class="max-w-xl mx-auto bg-white shadow-md rounded-lg p-6 mt-6">
+    <h2 class="text-2xl font-bold mb-4 text-gray-800">Añadir Libro</h2>
 
-<form method="POST" class="space-y-4 max-w-md">
+    <form action="{{ url_for('add_book') }}" method="POST" class="space-y-4">
 
-  <div>
-    <label class="block text-sm font-semibold mb-1">Título</label>
-    <input type="text" name="title" required
-           class="w-full border px-3 py-2 rounded">
-  </div>
+        <div>
+            <label class="block font-semibold">Título</label>
+            <input type="text" name="title" required
+                   class="w-full border rounded px-3 py-2">
+        </div>
 
-  <div>
-    <label class="block text-sm font-semibold mb-1">Autor</label>
-    <input type="text" name="author" required
-           class="w-full border px-3 py-2 rounded">
-  </div>
+        <div>
+            <label class="block font-semibold">Autor</label>
+            <input type="text" name="author" required
+                   class="w-full border rounded px-3 py-2">
+        </div>
 
-  <div>
-    <label class="block text-sm font-semibold mb-1">Color de portada</label>
-    <input type="text" name="cover_color" required
-           class="w-full border px-3 py-2 rounded">
-  </div>
+        <div>
+            <label class="block font-semibold">Año</label>
+            <input type="number" name="year"
+                   class="w-full border rounded px-3 py-2">
+        </div>
 
-  <div>
-    <label class="block text-sm font-semibold mb-1">Año de publicación</label>
-    <input type="number" name="year" required min="0" max="2100"
-           class="w-full border px-3 py-2 rounded">
-  </div>
+        <div>
+            <label class="block font-semibold">Categoría</label>
+            <select name="category" class="w-full border rounded px-3 py-2">
+                <option>Novela</option>
+                <option>Clásico</option>
+                <option>Fábula</option>
+                <option>Cuentos</option>
+                <option>Misterio</option>
+                <option>Distopía</option>
+                <option>Otro</option>
+            </select>
+        </div>
 
-  <div>
-    <label class="block text-sm font-semibold mb-1">Estado</label>
-    <select name="status" required
-            class="w-full border px-3 py-2 rounded">
-      <option value="DISPONIBLE">Disponible</option>
-      <option value="PRESTADO">Prestado</option>
-    </select>
-  </div>
+        <div>
+            <label class="block font-semibold">Estado</label>
+            <select name="status" class="w-full border rounded px-3 py-2">
+                <option value="DISPONIBLE">DISPONIBLE</option>
+                <option value="PRESTADO">PRESTADO</option>
+            </select>
+        </div>
 
-  <div>
-    <label class="block text-sm font-semibold mb-1">Categoría</label>
-    <select name="category" required
-            class="w-full border px-3 py-2 rounded">
-      <option value="Novela">Novela</option>
-      <option value="Historia">Historia</option>
-      <option value="Infantil">Infantil</option>
-      <option value="Educativo">Educativo</option>
-      <option value="Otro">Otro</option>
-    </select>
-  </div>
+        <div>
+            <label class="block font-semibold">Color de Portada</label>
+            <input type="color" name="cover_color" value="#3D5A47"
+                   class="w-20 h-10 border rounded">
+        </div>
 
-  <button type="submit"
-          class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-    Guardar
-  </button>
-
-</form>
+        <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+            Guardar Libro
+        </button>
+    </form>
+</div>
 
 {% endblock %}

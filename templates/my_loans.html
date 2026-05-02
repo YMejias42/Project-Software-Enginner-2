@@ -1,51 +1,32 @@
 {% extends "base.html" %}
-{% block title %}Mis préstamos — Biblioteca{% endblock %}
 {% block content %}
 
-<div class="mb-2" style="font-family: 'Times New Roman', serif;">
-  <span style="width:40px;height:2px;background:#3B82F6;display:inline-block;vertical-align:middle;margin-right:12px;"></span>
-  <span class="text-xs font-semibold tracking-widest uppercase opacity-50" style="color:#1E3A8A;">Historial personal</span>
-</div>
-<h1 class="text-4xl font-extrabold mb-1" style="font-family: 'Times New Roman', serif; color:#1E3A8A;">Mis préstamos</h1>
-<p class="text-sm opacity-40 mb-10" style="font-family: 'Times New Roman', serif; color:#1E3A8A;">Libros que tienes activos o que has devuelto.</p>
+<h2 class="text-3xl font-bold text-gray-800 mb-6">Mis Préstamos</h2>
 
-{% if loans %}
-<div class="space-y-3">
-  {% for loan in loans %}
-  <div class="stat-card p-5 flex items-center gap-5 animate-fade-up" style="animation-delay:{{ loop.index0 * 0.06 }}s;opacity:0; font-family:'Times New Roman', serif; border:1px solid #3B82F6;">
-    <!-- Color indicator -->
-    <div class="w-1 self-stretch flex-shrink-0 rounded-full" style="background:{{ loan['cover_color'] }}"></div>
+<div class="space-y-4">
 
-    <div class="flex-1 min-w-0">
-      <h3 class="font-bold truncate" style="color:#1E3A8A;">{{ loan['title'] }}</h3>
-      <p class="text-xs opacity-50" style="color:#1E3A8A;">{{ loan['author'] }}</p>
+    {% for loan in loans %}
+    <div class="bg-white shadow rounded-lg p-4 border-l-4 
+        {% if loan['returned'] %}border-green-600{% else %}border-red-600{% endif %}">
+
+        <h3 class="text-xl font-bold">{{ loan['title'] }}</h3>
+        <p class="text-gray-600">{{ loan['author'] }}</p>
+
+        <p class="mt-2"><strong>Fecha préstamo:</strong> {{ loan['loan_date'] }}</p>
+
+        {% if loan['returned'] %}
+            <p class="text-green-700 font-semibold mt-2">Devuelto el {{ loan['return_date'] }}</p>
+        {% else %}
+            <form action="{{ url_for('return_book', loan_id=loan['id']) }}" method="POST" class="mt-3">
+                <button class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                    Devolver libro
+                </button>
+            </form>
+        {% endif %}
+
     </div>
+    {% endfor %}
 
-    <div class="text-right flex-shrink-0">
-      <p class="text-xs opacity-40 mb-1" style="color:#1E3A8A;">Prestado: {{ loan['loan_date'][:10] }}</p>
-      {% if loan['returned'] %}
-        <p class="text-xs opacity-40" style="color:#1E3A8A;">Devuelto: {{ loan['return_date'][:10] }}</p>
-        <span class="inline-block mt-1 badge-available text-xs font-semibold px-2 py-0.5 uppercase tracking-wide" style="background:#60A5FA; color:white;">Devuelto</span>
-      {% else %}
-        <span class="inline-block mt-1 badge-borrowed text-xs font-semibold px-2 py-0.5 uppercase tracking-wide" style="background:#3B82F6; color:white;">Activo</span>
-      {% endif %}
-    </div>
-
-    {% if not loan['returned'] %}
-    <form action="{{ url_for('return_book', loan_id=loan['id']) }}" method="POST" class="flex-shrink-0">
-      <button type="submit" class="btn-clay text-xs py-2 px-4" style="background:#3B82F6; color:white; font-family:'Times New Roman', serif;"><span>Devolver</span></button>
-    </form>
-    {% endif %}
-  </div>
-  {% endfor %}
 </div>
-
-{% else %}
-<div class="text-center py-24 opacity-30" style="font-family:'Times New Roman', serif; color:#1E3A8A;">
-  <p class="text-6xl mb-4">📖</p>
-  <p class="text-xl mb-2" style="font-weight:bold;">Sin préstamos aún</p>
-  <p class="text-sm">Ve al <a href="{{ url_for('books') }}" class="underline" style="color:#3B82F6; opacity:0.8;">catálogo</a> para pedir un libro.</p>
-</div>
-{% endif %}
 
 {% endblock %}

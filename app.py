@@ -142,16 +142,15 @@ def create_app(test_config=None):
             author      = request.form['author']
             cover_color = request.form['cover_color']
             year        = request.form['year']
-            status      = request.form['status']
             category    = request.form['category']
-
-            available = 1 if status == "DISPONIBLE" else 0
+            status      = request.form['status']
+            available   = 1 if status == "DISPONIBLE" else 0
 
             conn = app.get_db_connection()
             conn.execute(
-                """INSERT INTO books (title, author, cover_color, year, status, category, available)
+                """INSERT INTO books (title, author, cover_color, year, category, status, available)
                    VALUES (?,?,?,?,?,?,?)""",
-                (title, author, cover_color, year, status, category, available)
+                (title, author, cover_color, year, category, status, available)
             )
             conn.commit()
             conn.close()
@@ -172,16 +171,15 @@ def create_app(test_config=None):
             author      = request.form['author']
             cover_color = request.form['cover_color']
             year        = request.form['year']
-            status      = request.form['status']
             category    = request.form['category']
-
-            available = 1 if status == "DISPONIBLE" else 0
+            status      = request.form['status']
+            available   = 1 if status == "DISPONIBLE" else 0
 
             conn.execute(
-                """UPDATE books
-                   SET title=?, author=?, cover_color=?, year=?, status=?, category=?, available=?
+                """UPDATE books 
+                   SET title=?, author=?, cover_color=?, year=?, category=?, status=?, available=?
                    WHERE id=?""",
-                (title, author, cover_color, year, status, category, available, book_id)
+                (title, author, cover_color, year, category, status, available, book_id)
             )
             conn.commit()
             conn.close()
@@ -241,8 +239,9 @@ def create_app(test_config=None):
     def return_book(loan_id):
         conn = app.get_db_connection()
         loan = conn.execute(
-            """SELECT loans.*, books.title FROM loans
-               JOIN books ON loans.book_id=books.id
+            """SELECT loans.*, books.title 
+               FROM loans 
+               JOIN books ON loans.book_id=books.id 
                WHERE loans.id=? AND loans.user_id=?""",
             (loan_id, session['user_id'])
         ).fetchone()
@@ -271,7 +270,8 @@ def create_app(test_config=None):
         loans = conn.execute(
             """SELECT loans.id, books.title, books.author, books.cover_color,
                       loans.loan_date, loans.return_date, loans.returned
-               FROM loans JOIN books ON loans.book_id=books.id
+               FROM loans 
+               JOIN books ON loans.book_id=books.id
                WHERE loans.user_id=?
                ORDER BY loans.returned ASC, loans.loan_date DESC""",
             (session['user_id'],)
